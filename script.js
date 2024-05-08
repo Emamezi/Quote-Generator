@@ -6,18 +6,21 @@ const newQuoteBtn = document.getElementById("new-quote");
 const quoteContainer = document.getElementById("quote-container");
 const loader = document.querySelector(".loader");
 
-function loading() {
+//Show loading
+function showLoadingSpinner() {
   loader.hidden = false;
   quoteContainer.hidden = true;
 }
-
-function complete() {
-  loader.hidden = true;
-  quoteContainer.hidden = false;
+//Hide showLoadingSpinner
+function hideLoadingSpinner() {
+  if (!loader.hidden) {
+    loader.hidden = true;
+    quoteContainer.hidden = false;
+  }
 }
 //show quote function
 function newQuote() {
-  loading();
+  showLoadingSpinner();
   //Pick random quote from apiqoutes array
   const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
   const { text, author } = quote;
@@ -31,21 +34,23 @@ function newQuote() {
   } else {
     quoteText.classList.remove("long-quote");
   }
+  //set Quote, Hide loader
   quoteText.textContent = text;
-  complete();
+  hideLoadingSpinner();
 }
 
 //Get quotes from API
 async function getQuotes() {
-  loading();
+  showLoadingSpinner();
   try {
     const apiUrl =
       "https://jacintodesign.github.io/quotes-api/data/quotes.json";
     const response = await fetch(apiUrl);
     apiQuotes = await response.json();
-    console.log(apiQuotes);
     newQuote();
-  } catch (error) {}
+  } catch (error) {
+    newQuote();
+  }
 }
 
 // Tweet Quote
